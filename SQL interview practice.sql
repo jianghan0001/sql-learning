@@ -809,4 +809,155 @@ SQL Development
 	Stored procedures can encapsulate logic. You can change stored procedure code without affecting clients.
 	Stored procedures provide better security to your data.	
 
+
+Question 1: SQL Query to find second highest salary of Employee
+
+Answer: SELECT Max(salary) from employee where salary NOT IN (SELECT max(salary) from employee);
+
+Question 2: SQL Query to find Max Salary from each department.
+
+Answer: SELECT deptID, max(salary) from employee GROUP BY deptID;
+
+Question 3: SQL Query to find Max Salary from each department (list the department name instead of deptID.
+
+Answer: SELECT deptname, max(salary) from employee e RIGHT JOIN department d ON e.deptID=d.deptID GROUP BY deptname;
+
+Question 4: Write SQL Query to display the current date.
+
+Answer: SELECT GetDate();
+
+Question 5: Write an SQL Query to check whether date passed to Query is the date of given format or not.
+
+Answer: SELECT ISDATE('1/08/2013') AS "MM/DD/YY";
+
+Question 6: Write an SQL Query to print the name of the distinct employee whose DOB is between 01/01/1960 to 31/12/1975.
+
+Answer: SELECT DISTINCT name from employee WHERE DOB between '01/01/1960' and '31/12/1975';
+
+Question 7: Write an SQL Query find number of employees according to gender  whose DOB is between 01/01/1960 to 31/12/1975.
+
+Answer: SELECT COUNT(*), gender FROM employee where DOB between '01/01/1960' and '31/12/1975' GROUP BY gender;
+
+Question 8: Write an SQL Query to find an employee whose Salary is equal or greater than 10000.
+
+Answer: SELECT name FROM employee where salary >= 10000;
+
+Question 9: Write an SQL Query to find name of employee whose name Start with ‘M’
+
+Answer: SELECT name FROM employee where name LIKE 'M%';
+
+Question 10: find all Employee records containing the word "Joe", regardless of whether it was stored as JOE, Joe, or joe.
+
+Answer: SELECT * FROM employee WHERE UPPER(name) LIKE '%JOE%';
+
+Question 11: Write an SQL Query to find  the year from date.
+
+Answer: SELECT YEAR(GETDATE()) as "year";
+
+Question 12: Write SQL Query to find duplicate rows in a database? and then write SQL query to delete them?
+
+Answer: SELECT name, COUNT(*) from employee GROUP BY name HAVING COUNT(*)>1
+        DELETE 
+
+Question 13: There is a table which contains two column Student and Marks, you need to find all the students, whose marks are greater than average marks i.e. list of above average students.
+
+Answer: SELECT student, marks from table where marks > (SELECT AVG(masks) from table);
+
+Question 14: How do you find all employees which are also manager? .
+
+Answer: SELECT e.name, m.name FROM employee e JOIN employee m ON e.mgr_id=m.emp_id;
+
+--1. Write query to get all employee detail from EmployeeDetail table.
+SELECT * from EmployeeDetail;
+
+--2. Write query to get only first name column from EmployeeDetail table.
+SELECT firstname from EmployeeDetail;
+
+--3. Write query to get first name in upper case as "First Name".
+SELECT UPPER(firstname) AS First Name From EmployeeDetail;
+
+--4. Write query to get first name in lower case as "First Name".
+SELECT LOWER(firstname) AS First Name From EmployeeDetail;
+
+--5. Write a query for combine first name and last name as "Name", (also include white space between first name and last name)
+SELECT firstname + '' +lastname AS Name From EmployeeDetail;
+
+--6. SELECT employee detail whose name is "Vikas".
+SELECT * From EmployeeDetail WHERE firstname= 'Vikas';
+
+--7. Get all employee detail whoes name start with letter a.
+SELECT * From EmployeeDetail Where firstname LIKE 'a%';
+
+--8. Get all employee detail whoes name contains letter k.
+SELECT * From EmployeeDetail WHERE firstname LIKE '%k%';
+
+--9. Get all employee detail whoes name end with letter h.
+SELECT * From EmployeeDetail WHERE firstname LIKE '%h';
+
+--10. Get all employee detail whoes name start with any single letter between a-p.
+SELECT * From EmployeeDetail WHERE firstname LIKE '[a-p]%';
+
+--11. Get all employee detail whoes name not start with any single letter between a-p.
+SELECT * From EmployeeDetail WHERE firstname LIKE '[^a-p]%';
+
+SQL语句如何优化
+
+1）应尽量避免在 where 子句中使用!=或<>操作符，否则将引擎放弃使用索引而进行全表扫描。
+2）应尽量避免在 where 子句中对字段进行 null 值判断，否则将导致引擎放弃使用索引而进行全表扫描，如：
+select id from t where num is null
+可以在num上设置默认值0，确保表中num列没有null值，然后这样查询：
+select id from t where num=0
+3）很多时候用 exists 代替 in 是一个好的选择
+4）用Where子句替换HAVING 子句 因为HAVING 只会在检索出所有记录之后才对结果集进行过滤
+
+在创建和使用索引时，有哪些要注意的地方，有什么规则？
+
+避免索引过多，会影响写性能
+给筛选效果低的字段加索引，几乎无效，如性别、状态标志等
+每条查询执行时，只会使用一个索引，有需要时应该创建复合索引
+复合索引使用时遵守“从左到右”原则，严禁左百分号
+不要在索引字段上有运算操作和使用函数，将无法使用索引
+
+如何分析一条SQL语句的执行性能，关注哪些信息？
+
+不论性能如何，不要有子查询和嵌套SQL，尽量不要有join查询
+使用explain命令，观察type列，可以知道是否是全表扫描，和索引的使用形式，观察key可以知道使用了哪个索引，观察key_len可以知道索引是否使用完成，观察rows可以知道扫描的行数是否过多，观察extra可以知道是否使用了临时表和进行了额外的排序操作
+
+复合索引的使用问题
+
+联合索引又叫复合索引。对于复合索引:Mysql从左到右的使用索引中的字段，一个查询可以只使用索引中的一部份，但只能是最左侧部分。例如索引是key index (a,b,c). 可以支持a | a,b| a,b,c 3种组合进行查找，但不支持 b,c进行查找 .当最左侧字段是常量引用时，索引就十分有效。
+
+两个或更多个列上的索引被称作复合索引。
+利用索引中的附加列，您可以缩小搜索的范围，但使用一个具有两列的索引 不同于使用两个单独的索引。复合索引的结构与电话簿类似，人名由姓和名构成，电话簿首先按姓氏对进行排序，然后按名字对有相同姓氏的人进行排序。如果您知 道姓，电话簿将非常有用；如果您知道姓和名，电话簿则更为有用，但如果您只知道名不姓，电话簿将没有用处。
+所以说创建复合索引时，应该仔细考虑列的顺序。对索引中的所有列执行搜索或仅对前几列执行搜索时，复合索引非常有用；仅对后面的任意列执行搜索时，复合索引则没有用处。
+如：建立 姓名、年龄、性别的复合索引。
+
++++ tags = ["sql","数据库","面试"] title = "sql优化面试可答" draft = false date = "2017-02-15T10:54:24+02:00"
+
++++
+
+尽量避免全表扫描，首先应考虑在 where 及 order by 涉及的列上建立索引。
+
+尽量避免在 where 子句中对字段进行 null 值判断
+
+尽量避免在 where 子句中使用!=或<>操作符
+
+尽量避免在 where 子句中使用or 来连接条件
+
+in 和 not in 也要慎用，否则会导致全表扫描
+
+下面的查询也将导致全表扫描：select id from t where name like '李%'若要提高效率，可以考虑全文检索。
+
+尽量避免在 where 子句中对字段进行表达式操作
+
+尽量避免在where子句中对字段进行函数操作
+
+多时候用 exists 代替 in 是一个好的选择
+
+尽量使用数字型字段
+
+任何地方都不要使用 select * from t
+
+索引并不是越多越好，索引固然可 以提高相应的 select 的效率，但同时也降低了 insert 及 update 
+的效率，因为 insert 或 update 时有可能会重建索引，所以怎样建索引需要慎重考虑，视具体情况而定。
 */
