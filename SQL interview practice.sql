@@ -961,3 +961,13 @@ in 和 not in 也要慎用，否则会导致全表扫描
 索引并不是越多越好，索引固然可 以提高相应的 select 的效率，但同时也降低了 insert 及 update 
 的效率，因为 insert 或 update 时有可能会重建索引，所以怎样建索引需要慎重考虑，视具体情况而定。
 */
+--second highest
+SELECT max(Salary)
+FROM Employee
+WHERE Salary < (SELECT max(Salary) FROM Employee)
+
+select salary
+from Employee
+where 2=(select count(*) 
+		from Employee as a join Employee as b 
+		on a.salary <= b.salary)

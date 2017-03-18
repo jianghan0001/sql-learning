@@ -573,3 +573,16 @@ create index abc_abc
 on dbo.customer(customerid)
 where condition = aaa
 A 3NF table which does not have multiple overlapping candidate keys is said to be in BCNF.
+*/
+--Write a SQL query to rank scores. If there is a tie between two scores, both should have the same ranking. 
+--Note that after a tie, the next ranking number should be the next consecutive integer value. In other words, 
+--there should be no "holes" between ranks.
+SELECT Scores.Score, COUNT(Ranking.Score) AS RANK
+  FROM Scores
+     , (
+       SELECT DISTINCT Score
+         FROM Scores
+       ) Ranking
+ WHERE Scores.Score <= Ranking.Score
+ GROUP BY Scores.Id, Scores.Score
+ ORDER BY Scores.Score DESC;
