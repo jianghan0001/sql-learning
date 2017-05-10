@@ -1,4 +1,4 @@
-/*supported type SSIS: https://aka.ms/edx-dat217x-ssis
+/*
 comma separated values(CSV)
 extensible markup language(XML)
 javascript object notation(JSON)
