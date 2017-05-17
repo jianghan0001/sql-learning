@@ -7,6 +7,10 @@ supported type SSIS: https://aka.ms/edx-dat217x-ssis
 FTP file transfer protocol
 install FTP on machine with Microsoft IIS
 DimDates 日期表格
+
+instead of read from files or other servers, it is good to created a staging DWS to import the data to 
+the SQL server first(staging table), row in - row out ODS概念 improve performance
+
 power BI, corrupt data, forecasting, data stale issue, 
 predicting, forecasting algorithms, prototype 样板， broadcast广播，
 
@@ -134,8 +138,26 @@ Insert into DimCustomers
 --truncate is faster
 
 
+--add foreign key
+ALTER TABLE dbo.FactSales ADD CONSTRAINT
+	fkFactSalesToDimProducts FOREIGN KEY (ProductKey) 
+	REFERENCES dbo.DimProducts	(ProductKey);
+go
 
+ALTER TABLE dbo.FactSales ADD CONSTRAINT 
+	fkFactSalesToDimCustomers FOREIGN KEY (CustomerKey) 
+	REFERENCES dbo.DimCustomers (CustomerKey);
+go
 
+ALTER TABLE dbo.FactSales ADD CONSTRAINT
+	fkFactSalesOrderDateToDimDates FOREIGN KEY (OrderDateKey) 
+	REFERENCES dbo.DimDates(CalendarDateKey);
+go
+
+ALTER TABLE dbo.FactSales ADD CONSTRAINT
+	fkFactSalesShipDateDimDates FOREIGN KEY (ShipDateKey)
+	REFERENCES dbo.DimDates (CalendarDateKey);
+go
 
 
 

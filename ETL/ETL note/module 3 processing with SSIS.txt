@@ -1,0 +1,12 @@
+1. OLE DB easy use, provide more tolerance for small inconsistencies in data type, make SSIS less frustrating
+2. provider is another word for driver
+3. ado.net has better performance, but more specific, 
+
+4. The Execute SQL tasks can be used for the following:
+
+Drop foreign key constraints 
+Re-create fact and dimension tables
+Modify database tables and views by creating, altering, or dropping them
+Truncate a table’s data
+Run stored procedures
+Save returned rowset objects into a variable
