@@ -586,3 +586,81 @@ SELECT Scores.Score, COUNT(Ranking.Score) AS RANK
  WHERE Scores.Score <= Ranking.Score
  GROUP BY Scores.Id, Scores.Score
  ORDER BY Scores.Score DESC;
+
+
+-- parse 用来convert 特殊格式的时间（'June 8th 2016' as date）
+-- persisted 在一个表里加个colunm带function的 它是不存储数据的 是每次调用每次现算的，为了提高performance，在后面加个persisted 这样就把数据存储了，调用更快
+--before load data, remove constrain/non cluster index could improve performance
+
+--foreign key
+create table dbo.customerorder
+(
+customerorderID int identity(100001,1) primary key,
+cutomerid int not null
+	foreign key references dbo.customers(customerID),
+orderAmount decimal(19,2) not null
+)
+
+--add clustered
+alter table abc add constraint IX_abc unique clustered (colunm1)
+create unique clustered index IX_abc on abc(colunm1 asc)
+CREATE NONCLUSTERED INDEX [<Name of Missing Index, sysname,>]
+ON [SalesLT].[PrintMediaPlacement] ([PublicationDate],[PlacementCost])
+INCLUDE ([MediaOutletID],[PlacementDate],[RelatedProductID])
+
+-- sp_help 'abc'(table, sp, view....)
+--sp_helptext'abc'
+--revert go 退一步
+
+--trigger 1-insert
+create trigger tr_opportunity_insert
+on sale.opportunity
+after insert as
+begin
+	set nocount on
+	insert into sales.opportunityAudit
+		(opportunityID, actionPerformed, actionOccuredAt)
+		select i.opportunityID,
+			'I',
+			sysdatetime()
+		from inserted as I
+end
+
+--trigger delete
+create trigger tr_category_delete
+on product.category
+after delete as
+begin
+	set nocount on
+	update p set p.discontinued = 1
+	from product.product as p
+	where exists (select 1 from deleted as d
+		where p.categoryID = d.categoryID)
+end
+
+--trigger update
+create trigger tr_productreview_update
+on product.productreview
+after update as 
+begin
+	update pr set pr.modificationdate = sysdatetime()
+	from product.productreview as pr
+	join
+		inserted as I
+	on pr.productReviewID = I.productReviewID
+end
+
+--trigger like constraint 超过10000的order必须有PO
+create trigger tr_salesOrder_insert
+on sales.orders
+after insert as
+begin
+	if exists
+		(select 1 from inserted as i
+		where i.subtotal >10000
+		and i.PO is null)
+		begin
+		print 'orders above 10000 must have PO numbers'
+		rollback
+		end
+end

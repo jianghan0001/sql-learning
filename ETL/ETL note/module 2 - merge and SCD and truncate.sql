@@ -136,8 +136,8 @@ Insert into DimCustomers
 --beginning but when there is a foreign key on it truncate is not allowed,
 --delete will not reset the primary key whenever you insert it will generate a new number
 --truncate is faster
-
-
+--Fact tables are design around an event that happened within --
+--Tables that hold description data are referred to as dimension tables
 --add foreign key
 ALTER TABLE dbo.FactSales ADD CONSTRAINT
 	fkFactSalesToDimProducts FOREIGN KEY (ProductKey) 

@@ -1,0 +1,15 @@
+ETL Best Practice 
+#1: Know the Data Requirements
+	A data warehouse project is implemented to provide a base for analysis
+#2: Data Cleaning and Master Data Management
+#3: Map the Source [to Landing Zone] [to Staging] to Warehouse
+#4: Know the Dependencies
+	ETL packages or jobs for some data will need to be completely loaded before other packages or jobs can begin
+#5: Size it up	
+	Know the volume of expected data and growth rates and the time it will take to load the increasing volume of data.
+#6: Logging
+#7: Scheduling
+#8: Alerting
+	Alerting only when a fault has occurred
+#9: Restartability
+#10: Documentation
