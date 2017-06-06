@@ -1,4 +1,7 @@
 /*
+concurency(²¢·¢£©--optimistic isolation(more common) --no locking and use data as a snapshot, prevent confict at frontend application
+				--passimistic isolation locking when you do updating ......
+Common language runtime(CLR) could be c sharp or visual basic
 comma separated values(CSV)
 extensible markup language(XML)
 javascript object notation(JSON)
