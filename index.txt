@@ -1,0 +1,3 @@
+covering index, add a include statment to include the colunm you want
+filter index, add a where clause to reduce the size of your index to make it higher performance, but you need to consider more situation that may not exceed the range of covering
+statistics-default 
